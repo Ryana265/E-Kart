@@ -1,11 +1,17 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import { Truck, Heart, ShoppingCart, Search } from 'lucide-react';
-import { useDispatch } from 'react-redux';
 import { searchProducts } from '../Redux/slice/productSlice';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector} from 'react-redux';
+
 
 function Header() {
   const dispatch=useDispatch()
+  const [wishListCount,setWishListCount]=useState(0)
+  const {wishlist}=useSelector((state)=>state.WishListReducer)
+useEffect(()=>{
+  setWishListCount(wishlist?.length)
+},[wishlist])
   return (
     <div>
       <nav className="bg-gradient-to-r from-purple-600 via-pink-500 to-orange-400 py-4 px-6 flex items-center justify-between shadow-lg">
@@ -31,13 +37,13 @@ function Header() {
       {/* Right Section - Wishlist and Cart */}
       <div className="flex items-center space-x-6">
         {/* Wishlist Button */}
-        <button className="flex items-center space-x-2 text-white hover:bg-white/20 py-2 px-4 rounded-full transition-all duration-200">
+        <Link to={"/wishlist"} className="flex items-center space-x-2 text-white hover:bg-white/20 py-2 px-4 rounded-full transition-all duration-200">
           <Heart className="h-5 w-5 text-pink-200" fill="currentColor" />
-          <span className="font-medium">WhishList</span>
+          <span className="font-medium">WishList</span>
           <span className="bg-gradient-to-r from-emerald-400 to-cyan-400 text-white rounded-full px-2.5 py-0.5 text-sm font-bold shadow-md">
-            0
+            {wishListCount}
           </span>
-        </button>
+        </Link>
 
         {/* Cart Button */}
         <button className="flex items-center space-x-2 text-white hover:bg-white/20 py-2 px-4 rounded-full transition-all duration-200">

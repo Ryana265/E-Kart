@@ -3,15 +3,27 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProductsData } from '../Redux/slice/productSlice';
 import { Link } from 'react-router-dom';
+import { addToWishlist } from '../Redux/slice/wishListSlice';
 
 function Home() {
   const dispatch = useDispatch();
   const { products, loading, error } = useSelector((state) => state.productReducer);
+  const {wishlist}=useSelector((state)=>state.WishListReducer)
 
   useEffect(() => {
     dispatch(fetchProductsData());
   }, [dispatch]);
 
+
+  const handleWishlist=(product)=>{
+    const existingProduct=wishlist.find(item=>item.id===product.id)
+    if(existingProduct){
+      alert("Product Already Exist in the WishList")
+    }
+    else{
+      dispatch(addToWishlist(product))
+    }
+  }
   return (
     <div style={{ marginTop: '70px' }}>
       {loading ? (
@@ -83,7 +95,7 @@ function Home() {
                       <div className="flex gap-2">
                         <button
                           className="p-2 rounded-full hover:bg-red-50 transition-colors"
-                          aria-label="Add to wishlist"
+                          aria-label="Add to wishlist" onClick={()=>handleWishlist(product)}
                         >
                           <Heart className="w-5 h-5 text-red-500" />
                         </button>

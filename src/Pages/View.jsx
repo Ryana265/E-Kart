@@ -1,16 +1,30 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { addToWishlist } from '../Redux/slice/wishListSlice';
 
 function View() {
+  const dispatch=useDispatch()
   const [product,setProduct]=useState({})
   const { loading} = useSelector((state) => state.productReducer);
   const {id}=useParams()
+  const {wishlist}=useSelector((state)=>state.WishListReducer)
+
 useEffect(()=>{
  const products=JSON.parse(localStorage.getItem("products"))
  setProduct(products.find(product=>product.id==id))
 
 },[])
+
+const handleWishlist=(product)=>{
+  const existingProduct=wishlist.find(item=>item.id===product.id)
+  if(existingProduct){
+    alert("Product Already Exist in the WishList")
+  }
+  else{
+    dispatch(addToWishlist(product))
+  }
+}
   return (
    <div className='mt-5'>
     {
@@ -39,7 +53,7 @@ useEffect(()=>{
  
              {/* Add to Cart and Wishlist Buttons */}
              <div className="flex gap-4 mt-6">
-               <button className="p-2 bg-orange-500 text-white rounded hover:bg-orange-600 transition-colors">
+               <button onClick={()=>handleWishlist(product)} className="p-2 bg-orange-500 text-white rounded hover:bg-orange-600 transition-colors">
                  Add to Cart
                </button>
                <button className="p-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors">
